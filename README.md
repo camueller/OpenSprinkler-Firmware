@@ -1,0 +1,3 @@
+# BewÃsserungsteuerung mit OpenSprinkler
+
+Text fehl noch ...
