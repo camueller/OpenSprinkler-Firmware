@@ -21,7 +21,7 @@ Für den Betrieb des Raspberry Pi wird ein 5V-Netzteil benötigt, das diesen dau
 
 Weil im Verteilerkasten kein Platz für eine Steckdose ist, habe ich die Stecker-Stifte des Netzteils mittels Lüsterklemmen mit dem Stromnetz verbunden.
 
-Mittels eines Korkens ist das Netzteil in der Ecke des Verteilerkastens fixiert.
+Mittels Korkens ist das Netzteil in der Ecke des Verteilerkastens fixiert.
 
 ![Raspberry Pi Netzteil](pics/raspberrypi_netzteil.png)
 
@@ -29,6 +29,10 @@ Mittels eines Korkens ist das Netzteil in der Ecke des Verteilerkastens fixiert.
 Zum Betrieb der Magenetventile wird ein Netzteil mit 24V Wechselspannung benötigt.
 
 Weil im Verteilerkasten kein Platz für eine Steckdose ist, habe ich die Stecker-Stifte des Netzteils mittels Lüsterklemmen mit dem Stromnetz verbunden.
+
+Mittels Korkens ist das Netzteil in der Ecke des Verteilerkastens fixiert.
+
+![Magnetventil Netzteil](pics/magnetventil_netzteil.png)
 
 ### Relais-Board
 Die I/O-Ports des Raspberry Pi mit 5V-Pegel dienen nur der Steuerung von Relais, welche den 24V-AC-Stromkreis für die Magnetventile schalten. Für jedes Ventil benötigt man ein Relais. Kompakt und preisgünstig geht mit einem Relais-Board. Für meine 8 Magnetventile habe ich dementsprechend ein 8-Kanal-Relais-Board verwendet.
