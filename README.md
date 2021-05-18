@@ -56,7 +56,7 @@ Der Raspberry Pi mit Netzteilen und Releais-Board müssen in der Nähe der Magne
 ### Regensensor
 Wenn es regnet, soll die Bewässerung nicht laufen. Ich hatte zunächst an einen Sensor zur Messung der Bodenfeuchte gedacht, aber angesichts der Probleme hinsichtlich Haltbarkeit und Aussagekraft wieder verworfen. Stattdessen verwende ich den Regensensor [Rainbird RSD-BEx](https://www.rainbird.de/produkte/rsd-bex), der mittels Korkscheiben das Verhalten des Bodens (Aufsaugen von Wasser und verzögertes Trocknen) simuliert.
 
-TODO: Bild des Regensensors
+![Regensensor](pics/regensensor.jpg)
 
 Eine Ader des Regensensor-Kabels wird mit GND verbunden. Die andere Ader wird mit GPIO 14 und mit einem 1-kOhm-Widerstand verbunden. Die andere Seite des Widerstand muss mit VCC verbunden sein (Pull-Up).
 
