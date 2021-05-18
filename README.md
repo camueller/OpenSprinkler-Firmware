@@ -41,8 +41,12 @@ Mittels Korkens ist das Netzteil in der Ecke des Verteilerkastens fixiert.
 ### Relais-Board
 Die I/O-Ports des Raspberry Pi mit 5V-Pegel dienen nur der Steuerung von Relais, welche den 24V-AC-Stromkreis für die Magnetventile schalten. Für jedes Ventil benötigt man ein Relais. Kompakt und preisgünstig geht mit einem Relais-Board. Für meine 8 Magnetventile habe ich dementsprechend ein 8-Kanal-Relais-Board verwendet.
 
+![Relais Board](pics/relais_board.png)
+
 ### Raspberry Pi I/O-Port-Kabel
 Zum Anschluss des Relais-Boards an die I/O-Ports des Raspberry Pi wird ein Flachkabel mit Pfostenstecker benötigt. Wer noch alte IDE-Flachkabel herumliegen hat, kann diese verwenden - so habe ich es auch bisher immer gemacht.
+
+![GPIO Kabel](pics/gpio_kabel.png)
 
 ### Verteilerkasten
 Der Raspberry Pi mit Netzteilen und Releais-Board müssen in der Nähe der Magnetventile untergebracht werden. Ich habe mich dazu entschieden, diese Elektronik in einem Verteilerkasten unterzubringen, der wiederum neben den Magnetventilen in der Ventilbox Platz finden muss. Also darf er nicht zu gross sein, muss aber Platz für alle Bauteile bieten. Außerdem sollte er vor der Luftfeuchtigkeit und Wasser schützen. Ursprünglich war ich deswegen auf der Suche nach einem Verteilerkasten mit Schutzart IP65, konnte allerdings keinen finden mit genug Platz aber nicht zu gross für die Ventilbox. Letztlich habe ich mich für einen Aufputz-Kleinverteiler für 8 Module auf Hutschiene mit Schutzart IP40 entschieden, den bei dem ich die vorhanden Schlitze mit Heisskleber verschlossen habe und für die Kabel Löcher gebohrt habe zur Aufnahme von Kabeldurchführungen mit Quetschdichtung. Rund um die Fronttüre habe ich Teile eines alten Fahrradschlauchs als Flachdichtung platziert. Insgesamt hoffe ich, dass diese Massnahmen ausreichen, um Luftfeuchtigkeit draussen zu halten.
@@ -51,6 +55,13 @@ Der Raspberry Pi mit Netzteilen und Releais-Board müssen in der Nähe der Magne
 
 ### Regensensor
 Wenn es regnet, soll die Bewässerung nicht laufen. Ich hatte zunächst an einen Sensor zur Messung der Bodenfeuchte gedacht, aber angesichts der Probleme hinsichtlich Haltbarkeit und Aussagekraft wieder verworfen. Stattdessen verwende ich den Regensensor [Rainbird RSD-BEx](https://www.rainbird.de/produkte/rsd-bex), der mittels Korkscheiben das Verhalten des Bodens (Aufsaugen von Wasser und verzögertes Trocknen) simuliert.
+
+TODO: Bild des Regensensors
+
+Eine Ader des Regensensor-Kabels wird mit GND verbunden. Die andere Ader wird mit GPIO 14 und mit einem 1-kOhm-Widerstand verbunden. Die andere Seite des Widerstand muss mit VCC verbunden sein (Pull-Up).
+
+![Regensensor Anschluss](pics/regensensor_anschluss.png)
+
 
 ## Software
 ### Installation des Betriebssystems
