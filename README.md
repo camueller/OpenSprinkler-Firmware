@@ -20,6 +20,51 @@ Für die I/O-Ports zur Steuerung der Magnetventile dürfen nur die Pins verwende
 
 ![OpenSprinkler GPIO pin use](pics/OpenSprinklerGpioPinUse.jpg)
 
+Für die Nummerierung der Pin existieren leider unterschiedliche Nummerierungen in Abhängigkeit von der verwendeten Software.
+Mit folgendem Befehl kann man sich die auf dem jeweiligen Raspberry Pi Model vorhanden Pins ansehen mit Namen, Bedeutung und Nummern-Zuordnung:
+
+```console
+pi@sprinkler:~ $ gpio readall
+ +-----+-----+---------+------+---+---Pi 4B--+---+------+---------+-----+-----+
+ | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
+ +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
+ |     |     |    3.3v |      |   |  1 || 2  |   |      | 5v      |     |     |
+ |   2 |   8 |   SDA.1 |   IN | 1 |  3 || 4  |   |      | 5v      |     |     |
+ |   3 |   9 |   SCL.1 |   IN | 1 |  5 || 6  |   |      | 0v      |     |     |
+ |   4 |   7 | GPIO. 7 |  OUT | 1 |  7 || 8  | 1 | IN   | TxD     | 15  | 14  |
+ |     |     |      0v |      |   |  9 || 10 | 0 | OUT  | RxD     | 16  | 15  |
+ |  17 |   0 | GPIO. 0 |  OUT | 0 | 11 || 12 | 0 | IN   | GPIO. 1 | 1   | 18  |
+ |  27 |   2 | GPIO. 2 |  OUT | 0 | 13 || 14 |   |      | 0v      |     |     |
+ |  22 |   3 | GPIO. 3 |  OUT | 1 | 15 || 16 | 0 | IN   | GPIO. 4 | 4   | 23  |
+ |     |     |    3.3v |      |   | 17 || 18 | 0 | IN   | GPIO. 5 | 5   | 24  |
+ |  10 |  12 |    MOSI |   IN | 0 | 19 || 20 |   |      | 0v      |     |     |
+ |   9 |  13 |    MISO |   IN | 0 | 21 || 22 | 0 | IN   | GPIO. 6 | 6   | 25  |
+ |  11 |  14 |    SCLK |   IN | 0 | 23 || 24 | 1 | IN   | CE0     | 10  | 8   |
+ |     |     |      0v |      |   | 25 || 26 | 1 | IN   | CE1     | 11  | 7   |
+ |   0 |  30 |   SDA.0 |   IN | 1 | 27 || 28 | 1 | IN   | SCL.0   | 31  | 1   |
+ |   5 |  21 | GPIO.21 |  OUT | 1 | 29 || 30 |   |      | 0v      |     |     |
+ |   6 |  22 | GPIO.22 |   IN | 1 | 31 || 32 | 0 | IN   | GPIO.26 | 26  | 12  |
+ |  13 |  23 | GPIO.23 |   IN | 1 | 33 || 34 |   |      | 0v      |     |     |
+ |  19 |  24 | GPIO.24 |  OUT | 1 | 35 || 36 | 1 | OUT  | GPIO.27 | 27  | 16  |
+ |  26 |  25 | GPIO.25 |   IN | 1 | 37 || 38 | 1 | OUT  | GPIO.28 | 28  | 20  |
+ |     |     |      0v |      |   | 39 || 40 | 1 | OUT  | GPIO.29 | 29  | 21  |
+ +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
+ | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
+ +-----+-----+---------+------+---+---Pi 4B--+---+------+---------+-----+-----+
+```
+Beispiel: der Regensensor wird an Pin 8 angeschlossen, das:
+- aktuell HIGH ist ("V"alue ist 1)
+- als "IN"put konfiguriert ist
+- den Namen "TxD" hat
+- mit der Bibliothek WiringPi ("wPi") als GPIO 15 angesprochen wird
+- die Broadcom-Anschlussnummer (BCM) 14 hat
+
+Wenn bei einem `gpio`-Befehl eine Pin-Nummer angegeben werden muss, ist das standardmässig die WiringPi-Nummer:
+```console
+$ gpio read 15
+1
+```
+
 ### Netzteil für Raspberry Pi
 Für den Betrieb des Raspberry Pi wird ein 5V-Netzteil benötigt, das diesen dauerhaft mit Strom versorgt. Dabei muss sichergestellt sein, dass das Netzteil ausreichend Leistung für das jeweilige Raspberry Pi-Modell dauerhaft bereitstellt.
 
@@ -75,32 +120,82 @@ $ sudo touch /mnt/ssh
 $ sudo umount /mnt
 ```
 
-Jetzt kann die SD-Karte in den Raspberry Pi gesteckt werden. Soblad er auch mit dem Netzteil verbunden wird, sollt er das Raspberry Pi OS von der SD-Karten booten.
+Jetzt kann die SD-Karte in den Raspberry Pi gesteckt werden. Sobald dieser auch mit dem Netzteil verbunden wird, sollt er das Raspberry Pi OS von der SD-Karte booten.
 
 Wenn der Boot-Vorgang abgeschlossen ist, muss man sich **via SSH mit dem Raspberry verbinden** für die weiteren Installations- und Konfigurationsschritte:
 ```console
 ssh pi@raspberrypi
 ```
 
+### Konfiguration mit `raspi-config`
+Einige Parameter müssen mit Hilfe des Programms `raspi-config` eingestellt werden, das wie folgt gestartet wird:
+```console
+$ sudo raspi-config
+```
+
 #### WLAN aktivieren
+Auswahl des Menüpunktes `Network Options -> Wireless LAN -> DE` zur Eingabe der SSID und des WLAN-Passworts.
 
 #### Hostname setzen
+Auswahl des Menüpunktes `Network Options -> Hostname` zur Eingabe der Hostnamen (z.B. "sprinkler").
 
 #### Zeitzone setzen
+Auswahl des Menüpunktes `Localisation Options -> Change Time Zone -> Europe -> Berlin` zum Setzen der Zeitzone.
 
-#### Software aktualisieren
+### Software aktualisieren
+Nachdem das Raspi OS auf die SD-Karte geschrieben wurde, muss dieses erstmal aktualisiert werden:
+```console
+$ sudo apt update
+$ sudo apt upgrade
+```
+Danach sollte ein Reboot durchgeführt werden, damit das aktualisierte Software auch aktiv ist:
+```console
+$ sudo reboot
+```
 
-
-
-### Installation von OpenSprinkler
-
+### Installation von OpenSprinkler Firmware
 #### Git installieren
+Zunächst muss `git` installiert werden, falls noch nicht geschehen:
+```console
+$ sudo apt install git
+```
 
 #### OpenSprinkler Firmware installieren
+Mit dem folgenden Befehl wird eine lokale Kopie des *OpenSprinkler Firmware* Git-Repositories erstellt:
+```console
+cd ~
+git clone https://github.com/OpenSprinkler/OpenSprinkler-Firmware.git
+```
+
+Anschliessend muss *OpenSprinkler Firmware* nocht gebaut werden:
+```console
+cd OpenSprinkler-Firmware
+sudo ./build.sh ospi
+```
 
 ### Konfiguration von OpenSprinkler
 
 
 
+
+
+
+
 Zum Setzen der Zeitzone in OpenSprinkler muss erst der Standort gelöscht werden!
 siehe: https://github.com/OpenSprinkler/OpenSprinkler-Firmware/issues/84
+
+
+#### Regensensor
+Mit dem installierte Pull-Up-Widerstandt verhält sich der entsprechende Pin wie folgt:
+
+bei Regen: 
+```console
+pi@sprinkler:~ $ gpio read 15
+1
+```
+
+kein Regen:
+```console
+pi@sprinkler:~ $ gpio read 15
+0
+```
