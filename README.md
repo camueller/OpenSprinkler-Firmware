@@ -16,6 +16,10 @@ Ich habe den Raspberry Pi auf einen DIN-Schienenhalter geschraubt mit Hilfe dess
 
 ![Raspberry Pi](pics/raspberrypi.png)
 
+Für die I/O-Ports zur Steuerung der Magnetventile dürfen nur die Pins verwendet werden, die nicht von OpenSprinkler für einen speziellen Zweck vorgesehen sind.
+
+![OpenSprinkler GPIO pin use](pics/OpenSprinklerGpioPinUse.jpg)
+
 ### Netzteil für Raspberry Pi
 Für den Betrieb des Raspberry Pi wird ein 5V-Netzteil benötigt, das diesen dauerhaft mit Strom versorgt. Dabei muss sichergestellt sein, dass das Netzteil ausreichend Leistung für das jeweilige Raspberry Pi-Modell dauerhaft bereitstellt.
 
