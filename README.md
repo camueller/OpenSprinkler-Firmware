@@ -88,13 +88,34 @@ Die I/O-Ports des Raspberry Pi mit 5V-Pegel dienen nur der Steuerung von Relais,
 
 ![Relais Board](pics/relais_board.png)
 
+Weil die Bewässerungskreise (und damit die Relais) nicht gleichzeitig aktiv sind, benötigt das Relais-Board keine eigene Stromversorgung, sondern kann direkt mit GND und +5V (Pin 2) des Raspberry Pi verbunden werden. Der Jumper muss dafür Pin 2 und 3 miteinander verbinden (default).
+
+![Relais Board Detail](pics/relais_board_detail.jpg)
+
+Die Eingänge habe ich wie folgt mit dem Raspberry Pi verbunden:
+
+| Bewässerungskreis | GPIO (BCM) |
+| ----------------- | ---------- |
+| 1                 | 5          |
+| 2                 | 6          |
+| 3                 | 13         |
+| 4                 | 16         |
+| 5                 | 19         |
+| 6                 | 20         |
+| 7                 | 21         |
+| 8                 | 26         |
+
 ### Raspberry Pi I/O-Port-Kabel
 Zum Anschluss des Relais-Boards an die I/O-Ports des Raspberry Pi wird ein Flachkabel mit Pfostenstecker benötigt. Wer noch alte IDE-Flachkabel herumliegen hat, kann diese verwenden - so habe ich es auch bisher immer gemacht.
 
 ![GPIO Kabel](pics/gpio_kabel.png)
 
 ### Verteilerkasten
-Der Raspberry Pi mit Netzteilen und Releais-Board müssen in der Nähe der Magnetventile untergebracht werden. Ich habe mich dazu entschieden, diese Elektronik in einem Verteilerkasten unterzubringen, der wiederum neben den Magnetventilen in der Ventilbox Platz finden muss. Also darf er nicht zu gross sein, muss aber Platz für alle Bauteile bieten. Außerdem sollte er vor der Luftfeuchtigkeit und Wasser schützen. Ursprünglich war ich deswegen auf der Suche nach einem Verteilerkasten mit Schutzart IP65, konnte allerdings keinen finden mit genug Platz aber nicht zu gross für die Ventilbox. Letztlich habe ich mich für einen Aufputz-Kleinverteiler für 8 Module auf Hutschiene mit Schutzart IP40 entschieden, den bei dem ich die vorhanden Schlitze mit Heisskleber verschlossen habe und für die Kabel Löcher gebohrt habe zur Aufnahme von Kabeldurchführungen mit Quetschdichtung. Rund um die Fronttüre habe ich Teile eines alten Fahrradschlauchs als Flachdichtung platziert. Insgesamt hoffe ich, dass diese Massnahmen ausreichen, um Luftfeuchtigkeit draussen zu halten.
+Der Raspberry Pi mit Netzteilen und Releais-Board müssen in der Nähe der Magnetventile untergebracht werden. Ich habe mich dazu entschieden, diese Elektronik in einem Verteilerkasten unterzubringen, der wiederum neben den Magnetventilen in der Ventilbox Platz finden muss. Also darf er nicht zu gross sein, muss aber Platz für alle Bauteile bieten. Außerdem sollte er vor der Luftfeuchtigkeit und Wasser schützen. Ursprünglich war ich deswegen auf der Suche nach einem Verteilerkasten mit Schutzart IP65, konnte allerdings keinen finden mit genug Platz aber nicht zu gross für die Ventilbox.
+
+![Ventilbox](pics/ventilbox.jpg)
+
+Letztlich habe ich mich für einen Aufputz-Kleinverteiler für 8 Module auf Hutschiene mit Schutzart IP40 entschieden, den bei dem ich die vorhanden Schlitze mit Heisskleber verschlossen habe und für die Kabel Löcher gebohrt habe zur Aufnahme von Kabeldurchführungen mit Quetschdichtung. Rund um die Fronttüre habe ich Teile eines alten Fahrradschlauchs als Flachdichtung platziert. Insgesamt hoffe ich, dass diese Massnahmen ausreichen, um Luftfeuchtigkeit draussen zu halten.
 
 ![Verteiler](pics/verteiler.png)
 
@@ -175,15 +196,20 @@ sudo ./build.sh ospi
 
 ### Konfiguration von OpenSprinkler
 
-
-
-
-
-
-
 Zum Setzen der Zeitzone in OpenSprinkler muss erst der Standort gelöscht werden!
 siehe: https://github.com/OpenSprinkler/OpenSprinkler-Firmware/issues/84
 
+#### Bewässerungskreise
+Mit der oben beschriebenen Verdrahtung des Relais-Boards ist für jedes Relais der zugehörige GPIOs auf HIGH, wenn der Stromkreis des Magnetventils unterbrochen ist. Wenn der GPIO auf LOW geht, wird der Stromkreis des Magnetventils geschlossen und die Beregnung läuft.
+
+```console
+// Regnerkreis 1 (BCM 5 bzw. wPi 21) nicht aktiv
+pi@sprinkler:~ $ gpio read 21
+1
+// Regnerkreis 1 (BCM 5 bzw. wPi 21) aktiv
+pi@sprinkler:~ $ gpio read 21
+0
+```
 
 #### Regensensor
 Mit dem installierte Pull-Up-Widerstandt verhält sich der entsprechende Pin wie folgt:
